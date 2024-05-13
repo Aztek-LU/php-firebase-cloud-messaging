@@ -68,7 +68,7 @@ class Client implements ClientInterface
             'body' => json_encode($message)
         ];
         echo "Request Array::";
-        print_r($requestArr);
+        var_dump($requestArr);
         die;
         return $this->guzzleClient->post(
             $this->getApiUrl(),
