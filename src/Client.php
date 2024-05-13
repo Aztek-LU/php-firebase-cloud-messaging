@@ -59,7 +59,7 @@ class Client implements ClientInterface
      */
     public function send(Message $message)
     {
-        echo $this->getApiUrl();
+        echo "API URL::".$this->getApiUrl();
         $requestArr = [
             'headers' => [
                 'Authorization' => sprintf('key=%s', $this->apiKey),
@@ -67,6 +67,7 @@ class Client implements ClientInterface
             ],
             'body' => json_encode($message)
         ];
+        echo "Request Array::";
         print_r($requestArr);
         die;
         return $this->guzzleClient->post(
