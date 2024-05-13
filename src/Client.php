@@ -13,6 +13,7 @@ class Client implements ClientInterface
     const DEFAULT_TOPIC_REMOVE_SUBSCRIPTION_API_URL = 'https://iid.googleapis.com/iid/v1:batchRemove';
 
     private $apiKey;
+    private $accessToken;
     private $proxyApiUrl;
     private $guzzleClient;
 
@@ -51,13 +52,13 @@ class Client implements ClientInterface
     /**
      * add your server api token here
      *
-     * @param string $apiToken
+     * @param string $accessToken
      *
      * @return \Vanderbilt\PhpFirebaseCloudMessaging\Client
      */
-    public function setApiToken($apiToken)
+    public function setAccessToken($accessToken)
     {
-        $this->apiToken = $apiToken;
+        $this->accessToken = $accessToken;
         return $this;
     }
     /**
@@ -85,7 +86,7 @@ class Client implements ClientInterface
             "https://fcm.googleapis.com/v1/projects/test-project-8d27a/messages:send",
             [
                 'headers' => [
-                    'Authorization' => sprintf('Bearer %s', $this->apiToken),
+                    'Authorization' => sprintf('Bearer %s', $this->accessToken),
                     'Content-Type' => 'application/json'
                 ],
                 'body' => '{"message": '.json_encode($message).'}'
