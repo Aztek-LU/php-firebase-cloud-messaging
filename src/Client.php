@@ -49,6 +49,18 @@ class Client implements ClientInterface
     }
 
     /**
+     * add your server api token here
+     *
+     * @param string $apiToken
+     *
+     * @return \Vanderbilt\PhpFirebaseCloudMessaging\Client
+     */
+    public function setApiToken($apiToken)
+    {
+        $this->apiToken = $apiToken;
+        return $this;
+    }
+    /**
      * sends your notification to the google servers and returns a guzzle repsonse object
      * containing their answer.
      *
@@ -59,18 +71,7 @@ class Client implements ClientInterface
      */
     public function send(Message $message)
     {
-        echo "API URL::".$this->getApiUrl();
-        $requestArr = [
-            'headers' => [
-                'Authorization' => sprintf('key=%s', $this->apiKey),
-                'Content-Type' => 'application/json'
-            ],
-            'body' => json_encode($message)
-        ];
-        echo "Request Array::";
-        var_dump($requestArr);
-        die;
-        return $this->guzzleClient->post(
+        /*return $this->guzzleClient->post(
             $this->getApiUrl(),
             [
                 'headers' => [
@@ -78,6 +79,16 @@ class Client implements ClientInterface
                     'Content-Type' => 'application/json'
                 ],
                 'body' => json_encode($message)
+            ]
+        );*/
+        return $this->guzzleClient->post(
+            "https://fcm.googleapis.com/v1/projects/test-project-8d27a/messages:send",
+            [
+                'headers' => [
+                    'Authorization' => sprintf('Bearer %s', $this->apiToken),
+                    'Content-Type' => 'application/json'
+                ],
+                'body' => '{"message": '.json_encode($message).'}'
             ]
         );
     }
