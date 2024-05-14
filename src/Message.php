@@ -166,7 +166,11 @@ class Message implements \JsonSerializable
         }
         
         if (count($this->recipients) == 1) {
-            $jsonData['to'] = $this->createTarget();    
+            if ($this->recipientType == Device::class) {
+                $jsonData['token'] = $this->createTarget();
+            } else {
+                $jsonData['to'] = $this->createTarget();
+            }
         } elseif ($this->recipientType == Device::class) {
             $jsonData['registration_ids'] = $this->createTarget();
         } else {
