@@ -82,14 +82,15 @@ class Client implements ClientInterface
                 'body' => json_encode($message)
             ]
         );*/
+        //"https://fcm.googleapis.com/v1/projects/mycap-823c3/messages:send",
         return $this->guzzleClient->post(
-            "https://fcm.googleapis.com/v1/projects/test-project-8d27a/messages:send",
+            "https://fcm.googleapis.com/v1/projects/mycap-4b371/messages:send",
             [
                 'headers' => [
                     'Authorization' => sprintf('Bearer %s', $this->accessToken),
                     'Content-Type' => 'application/json'
                 ],
-                'body' => '{"message":{"token":"eeCzYLdmQWu2Tp2gpp3KWs:APA91bGhZZJd80CNlppVuKQghe5y7JRs3BgEHjA16LmmWDhxvPCDbn7B8W2rdiC1x9ZQKGWEEriIlooJJcPPRS3vtZIr9gjpHpEyGvW32PpONzxNax5Ga0NKx9tT1vDDuSGJqPdiXhDF","notification":{"body":"This is an FCM notification message!","title":""}}}'
+                'body' => '{"message":{"token":"eeCzYLdmQWu2Tp2gpp3KWs:APA91bGhZZJd80CNlppVuKQghe5y7JRs3BgEHjA16LmmWDhxvPCDbn7B8W2rdiC1x9ZQKGWEEriIlooJJcPPRS3vtZIr9gjpHpEyGvW32PpONzxNax5Ga0NKx9tT1vDDuSGJqPdiXhDF","notification":{"body":"This is an FCM notification message!","title":"FCM"}}}'
             ]
         );
     }
