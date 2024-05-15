@@ -79,7 +79,7 @@ class Client implements ClientInterface
             $this->getApiUrl(),
             [
                 'headers' => [
-                    'Authorization' => sprintf('key=%s', 'AAAAVEKowtg:APA91bGcDOWK8f1Yx5SVIZI2UIoEu8Ej6yszucOKG6Wd0VPQxJFuV9j0c-FWLAnSu3rNuy8y30HI_f_FjPqbhdLZbgqqwtl7iBFGawrsXkL1ZOiO0ayf3C1R6pyMvl_46UlEyuyniIFp'),
+                    'Authorization' => sprintf('key=%s', 'AAAAYvQOI0U:APA91bFhVh-2Y6yKRhy3vTB5q4LgO9ENII81UfAUGj-Fwz6Ep7h1UgVSPNuAX4tYDepyAkbV-UU9ArO_1rXGbPP1zMEMJvm-opyCmUffN9oRHsaAkPmzk2QaKN4GKmvC0wp2-I_69hVf'),
                     'Content-Type' => 'application/json'
                 ],
                 'body' => json_encode($message)
