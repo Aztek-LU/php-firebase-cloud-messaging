@@ -75,7 +75,6 @@ class Client implements ClientInterface
         /*$request['message'] = $message;
         echo json_encode($request);
         die;*/
-        echo $this->apiKey; die;
         return $this->guzzleClient->post(
             $this->getApiUrl(),
             [
