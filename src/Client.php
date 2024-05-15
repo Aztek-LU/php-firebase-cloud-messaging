@@ -75,11 +75,12 @@ class Client implements ClientInterface
         /*$request['message'] = $message;
         echo json_encode($request);
         die;*/
+        echo $this->apiKey; die;
         return $this->guzzleClient->post(
             $this->getApiUrl(),
             [
                 'headers' => [
-                    'Authorization' => sprintf('key=%s', 'AAAAVEKowtg:APA91bGcDOWK8f1Yx5SVIZI2UIoEu8Ej6yszucOKG6Wd0VPQxJFuV9j0c-FWLAnSu3rNuy8y30HI_f_FjPqbhdLZbgqqwtl7iBFGawrsXkL1ZOiO0ayf3C1R6pyMvl_46UlEyuyniIFp'),
+                    'Authorization' => sprintf('key=%s', $this->apiKey),
                     'Content-Type' => 'application/json'
                 ],
                 'body' => json_encode($message)
