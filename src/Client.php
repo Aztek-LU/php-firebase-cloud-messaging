@@ -76,7 +76,7 @@ class Client implements ClientInterface
     public function send(Message $message)
     {
         $param = ['message' => $message];
-var_dump(json_encode($param)); die;
+
         return $this->guzzleClient->post(
             $this->getHTTPV1ApiUrl(),
             [
