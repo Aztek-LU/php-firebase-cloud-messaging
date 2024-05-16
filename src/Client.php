@@ -75,7 +75,7 @@ class Client implements ClientInterface
         /*$request['message'] = $message;
         echo json_encode($request);
         die;*/
-        /*return $this->guzzleClient->post(
+        return $this->guzzleClient->post(
             $this->getApiUrl(),
             [
                 'headers' => [
@@ -84,7 +84,7 @@ class Client implements ClientInterface
                 ],
                 'body' => json_encode($message)
             ]
-        );*/
+        );
         //"https://fcm.googleapis.com/v1/projects/mycap-823c3/messages:send",
         return $this->guzzleClient->post(
             "https://fcm.googleapis.com/v1/projects/mycap-823c3/messages:send",
