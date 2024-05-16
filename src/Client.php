@@ -9,11 +9,14 @@ use GuzzleHttp;
 class Client implements ClientInterface
 {
     const DEFAULT_API_URL = 'https://fcm.googleapis.com/fcm/send';
+    const HTTPV1_API_URL_PREFIX = 'https://fcm.googleapis.com/v1/projects/';
+    const HTTPV1_API_URL_POSTEFIX = '/messages:send';
     const DEFAULT_TOPIC_ADD_SUBSCRIPTION_API_URL = 'https://iid.googleapis.com/iid/v1:batchAdd';
     const DEFAULT_TOPIC_REMOVE_SUBSCRIPTION_API_URL = 'https://iid.googleapis.com/iid/v1:batchRemove';
 
     private $apiKey;
     private $accessToken;
+    private $projectId;
     private $proxyApiUrl;
     private $guzzleClient;
 
@@ -50,7 +53,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * add your server api token here
+     * add your server access token here
      *
      * @param string $accessToken
      *
@@ -72,29 +75,16 @@ class Client implements ClientInterface
      */
     public function send(Message $message)
     {
-        var_dump(json_encode($message)); die;
-        /*$request['message'] = $message;
-        echo json_encode($request);
-        die;*/
+        $param = ['message' => $message];
+
         return $this->guzzleClient->post(
-            $this->getApiUrl(),
-            [
-                'headers' => [
-                    'Authorization' => sprintf('key=%s', $this->apiKey),
-                    'Content-Type' => 'application/json'
-                ],
-                'body' => json_encode($message)
-            ]
-        );
-        //"https://fcm.googleapis.com/v1/projects/mycap-823c3/messages:send",
-        return $this->guzzleClient->post(
-            "https://fcm.googleapis.com/v1/projects/mycap-823c3/messages:send",
+            $this->getHTTPV1ApiUrl(),
             [
                 'headers' => [
                     'Authorization' => sprintf('Bearer %s', $this->accessToken),
                     'Content-Type' => 'application/json'
                 ],
-                'body' => '{"message":{"token":"eeCzYLdmQWu2Tp2gpp3KWs:APA91bGhZZJd80CNlppVuKQghe5y7JRs3BgEHjA16LmmWDhxvPCDbn7B8W2rdiC1x9ZQKGWEEriIlooJJcPPRS3vtZIr9gjpHpEyGvW32PpONzxNax5Ga0NKx9tT1vDDuSGJqPdiXhDF","notification":{"body":"This is an FCM notification message!","title":"FCM"}}}'
+                'body' => json_encode($param)
             ]
         );
     }
@@ -154,5 +144,26 @@ class Client implements ClientInterface
     private function getApiUrl()
     {
         return isset($this->proxyApiUrl) ? $this->proxyApiUrl : self::DEFAULT_API_URL;
+    }
+
+    /**
+     * add your project ID
+     *
+     * @param string $projectId
+     *
+     * @return \Vanderbilt\PhpFirebaseCloudMessaging\Client
+     */
+    public function setProjectId($projectId)
+    {
+        $this->projectId = $projectId;
+    }
+    private function getHTTPV1ApiUrl()
+    {
+        return self::HTTPV1_API_URL_PREFIX.$this->getProjectId().self::HTTPV1_API_URL_POSTEFIX;
+    }
+
+    public function getProjectId()
+    {
+        return $this->projectId;
     }
 }
