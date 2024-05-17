@@ -75,6 +75,18 @@ class Client implements ClientInterface
      */
     public function send(Message $message)
     {
+        var_dump($message);
+        return $this->guzzleClient->post(
+            $this->getApiUrl(),
+            [
+                'headers' => [
+                    'Authorization' => sprintf('key=%s', $this->apiKey),
+                    'Content-Type' => 'application/json'
+                ],
+                'body' => json_encode($message)
+            ]
+        );
+        die;
         $param = ['message' => $message];
 
         return $this->guzzleClient->post(
