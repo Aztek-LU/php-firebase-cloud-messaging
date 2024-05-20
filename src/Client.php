@@ -81,7 +81,7 @@ class Client implements ClientInterface
         if (count($recipients) > 1) {
             $tokens = [];
             foreach ($recipients as $recipient) {
-                $tokens[] = $recipient->token;
+                $tokens[] = $recipient->getToken();
             }
             var_dump($tokens);
             $topic = "NewMessage_".date("YmdHis")."_".substr(md5(rand()), 0, 4);
