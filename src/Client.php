@@ -77,21 +77,37 @@ class Client implements ClientInterface
     {
         $param = ['message' => $message];
         $recipients = $message->getRecipients();
-        foreach ($recipients as $recipient) {
-            $tokens[] = $recipient->getToken();
+        if (count($recipients) > 1) {
+            $messageArr = json_decode($message);
+            if (isset($messageArr['registration_ids'])) {
+                foreach ($recipients as $recipient) {
+                    $param['message']['token'] = $recipient->getToken();
+                    $output = $this->guzzleClient->post(
+                                    $this->getHTTPV1ApiUrl(),
+                                    [
+                                        'headers' => [
+                                            'Authorization' => sprintf('Bearer %s', $this->accessToken),
+                                            'Content-Type' => 'application/json'
+                                        ],
+                                        'body' => json_encode($param)
+                                    ]
+                    );
+                }
+            }
+        } else {
+            return $this->guzzleClient->post(
+                $this->getHTTPV1ApiUrl(),
+                [
+                    'headers' => [
+                        'Authorization' => sprintf('Bearer %s', $this->accessToken),
+                        'Content-Type' => 'application/json'
+                    ],
+                    'body' => json_encode($param)
+                ]
+            );
         }
-        var_dump($message['registration_ids']);
-        echo json_encode($param); die;
-        return $this->guzzleClient->post(
-            $this->getHTTPV1ApiUrl(),
-            [
-                'headers' => [
-                    'Authorization' => sprintf('Bearer %s', $this->accessToken),
-                    'Content-Type' => 'application/json'
-                ],
-                'body' => json_encode($param)
-            ]
-        );
+        return $output;
+
     }
 
     /**
