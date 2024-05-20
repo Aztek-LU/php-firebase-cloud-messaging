@@ -76,15 +76,15 @@ class Client implements ClientInterface
     public function send(Message $message)
     {
         $param = ['message' => $message];
+
         $recipients = $message->getRecipients();
         if (count($recipients) > 1) {
             $json = json_encode($message);
             $messageArr = json_decode($json, true);
             if (isset($messageArr['registration_ids'])) {
                 foreach ($messageArr['registration_ids'] as $recipient_token) {
-                    $message->token = $recipient_token;
-                    var_dump($message);
-                    $param = ['message' => $message];
+                    $messageArr['token'] = $recipient_token;
+                    $param = ['message' => $messageArr];
                     echo json_encode($param); die;
                     $output = $this->guzzleClient->post(
                                     $this->getHTTPV1ApiUrl(),
