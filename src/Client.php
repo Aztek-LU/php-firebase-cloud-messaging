@@ -80,7 +80,7 @@ class Client implements ClientInterface
         foreach ($recipients as $recipient) {
             $tokens[] = $recipient->getToken();
         }
-        var_dump($tokens);
+        var_dump($message['registration_ids']);
         echo json_encode($param); die;
         return $this->guzzleClient->post(
             $this->getHTTPV1ApiUrl(),
