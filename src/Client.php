@@ -89,7 +89,7 @@ class Client implements ClientInterface
             $response = $this->addTopicSubscription($topic, $tokens);
             if ($response->getStatusCode() == 200) {
                 $messageArr = json_decode(json_encode($param), true);
-                unset($messageArr['message']['token']);
+                unset($messageArr['message']['registration_ids']);
                 $messageArr['message']['topic'] = $topic;
                 print_r($messageArr);
                 $output = $this->guzzleClient->post(
