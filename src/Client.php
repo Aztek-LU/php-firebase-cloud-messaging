@@ -82,6 +82,8 @@ class Client implements ClientInterface
             if (isset($messageArr['registration_ids'])) {
                 foreach ($recipients as $recipient) {
                     $param['message']['token'] = $recipient->getToken();
+                    var_dump($param);
+                    echo json_encode($param); die;
                     $output = $this->guzzleClient->post(
                                     $this->getHTTPV1ApiUrl(),
                                     [
