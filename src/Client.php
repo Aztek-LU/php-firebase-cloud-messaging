@@ -77,28 +77,33 @@ class Client implements ClientInterface
     {
         $param = ['message' => $message];
 
-        var_dump(json_encode($param)); die;
+        // FCM HTTP V1 does not support sending notifications to multiple devices (supported only in legacy API via registration_tokens
+        // So, Adding topic subscription, sending notification to topic, then remove topic subscription
         $recipients = $message->getRecipients();
         if (count($recipients) > 1) {
             $tokens = [];
             foreach ($recipients as $recipient) {
                 $tokens[] = $recipient->getToken();
             }
-            $topic = "NewMessage_".date("YmdHis")."_".substr(md5(rand()), 0, 4);
-            $response = $this->addTopicSubscription($topic, $recipients);
+            $topic = "Topic_".date("YmdHis")."_".substr(md5(rand()), 0, 4);
+            $response = $this->addTopicSubscription($topic, $tokens);
             if ($response->getStatusCode() == 200) {
-                return $this->guzzleClient->post(
+                $messageArr = json_decode(json_encode($param), true);
+                unset($messageArr['message']['token']);
+                $messageArr['message']['topic'] = $topic;
+                $output = $this->guzzleClient->post(
                                     $this->getHTTPV1ApiUrl(),
                                     [
                                         'headers' => [
                                             'Authorization' => sprintf('Bearer %s', $this->accessToken),
                                             'Content-Type' => 'application/json'
                                         ],
-                                        'body' => json_encode($param)
+                                        'body' => json_encode($messageArr)
                                     ]
                 );
             }
-
+            $response = $this->removeTopicSubscription($topic, $tokens);
+            return $output;
         } else {
             return $this->guzzleClient->post(
                 $this->getHTTPV1ApiUrl(),
