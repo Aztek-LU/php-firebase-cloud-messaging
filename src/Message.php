@@ -244,4 +244,8 @@ class Message implements \JsonSerializable
         }
         return null;
     }
+
+    public function getRecipients() {
+        return $this->recipients;
+    }
 }
