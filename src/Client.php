@@ -81,7 +81,7 @@ class Client implements ClientInterface
         if (count($recipients) > 1) {
             $json = json_encode($message);
             var_dump($json);
-            $messageArr = json_decode($json);
+            $messageArr = json_decode($json, true);
             print_r($messageArr);
             if (isset($messageArr['registration_ids'])) {
                 foreach ($recipients as $recipient) {
