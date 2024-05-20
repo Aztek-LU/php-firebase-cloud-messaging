@@ -77,10 +77,13 @@ class Client implements ClientInterface
     {
         $param = ['message' => $message];
         $recipients = $message->getRecipients();
+        echo count($recipients);
         if (count($recipients) > 1) {
             $messageArr = json_decode($message);
+            print_r($messageArr);
             if (isset($messageArr['registration_ids'])) {
                 foreach ($recipients as $recipient) {
+                    var_dump($recipient); die;
                     $param['message']['token'] = $recipient->getToken();
                     var_dump($param);
                     echo json_encode($param); die;
