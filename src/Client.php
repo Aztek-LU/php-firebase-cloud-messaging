@@ -77,16 +77,28 @@ class Client implements ClientInterface
     {
         $param = ['message' => $message];
 
+        var_dump(json_encode($param)); die;
         $recipients = $message->getRecipients();
         if (count($recipients) > 1) {
             $tokens = [];
             foreach ($recipients as $recipient) {
                 $tokens[] = $recipient->getToken();
             }
-            var_dump($tokens);
             $topic = "NewMessage_".date("YmdHis")."_".substr(md5(rand()), 0, 4);
-            echo $topic; die;
-            //$this->addTopicSubscription($topic, $recipients);
+            $response = $this->addTopicSubscription($topic, $recipients);
+            if ($response->getStatusCode() == 200) {
+                return $this->guzzleClient->post(
+                                    $this->getHTTPV1ApiUrl(),
+                                    [
+                                        'headers' => [
+                                            'Authorization' => sprintf('Bearer %s', $this->accessToken),
+                                            'Content-Type' => 'application/json'
+                                        ],
+                                        'body' => json_encode($param)
+                                    ]
+                );
+            }
+
         } else {
             return $this->guzzleClient->post(
                 $this->getHTTPV1ApiUrl(),
