@@ -77,6 +77,7 @@ class Client implements ClientInterface
     {
         $param = ['message' => $message];
 
+        echo ncode($param); die;
         return $this->guzzleClient->post(
             $this->getHTTPV1ApiUrl(),
             [
