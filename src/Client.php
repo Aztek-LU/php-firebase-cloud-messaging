@@ -79,7 +79,11 @@ class Client implements ClientInterface
 
         $recipients = $message->getRecipients();
         if (count($recipients) > 1) {
-            var_dump($recipients);
+            $tokens = [];
+            foreach ($recipients as $recipient) {
+                $tokens[] = $recipient->token;
+            }
+            var_dump($tokens);
             $topic = "NewMessage_".date("YmdHis")."_".substr(md5(rand()), 0, 4);
             echo $topic; die;
             //$this->addTopicSubscription($topic, $recipients);
