@@ -85,7 +85,6 @@ class Client implements ClientInterface
                 foreach ($messageArr['registration_ids'] as $recipient_token) {
                     $messageArr['token'] = $recipient_token;
                     $param = ['message' => $messageArr];
-                    echo json_encode($param); die;
                     $output = $this->guzzleClient->post(
                                     $this->getHTTPV1ApiUrl(),
                                     [
