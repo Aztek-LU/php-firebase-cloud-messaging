@@ -19,6 +19,7 @@ class Message implements \JsonSerializable
     private $notification;
     private $collapseKey;    
     private $priority;
+    private $android;
     private $data;
     private $recipients = [];
     private $recipientType;    
@@ -65,10 +66,14 @@ class Message implements \JsonSerializable
 
     public function setPriority($priority)
     {
-        $this->android['priority'] = $priority;
+        $this->priority = $priority;
         return $this;
     }
-
+    public function setAndroidPriority(array $priority)
+    {
+        $this->android = $priority;
+        return $this;
+    }
     public function setData(array $data)
     {
         $this->data = $data;
