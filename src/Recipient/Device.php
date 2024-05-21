@@ -1,9 +1,12 @@
 <?php
 namespace Vanderbilt\PhpFirebaseCloudMessaging\Recipient;
 
+use Vanderbilt\PhpFirebaseCloudMessaging\Message;
+
 class Device extends Recipient
 {
     private $token;
+    private $android;
 
     public function __construct($token)
     {
@@ -15,4 +18,13 @@ class Device extends Recipient
     {
         return $this->token;
     }
+    public function setMessagePriority(Message $message)
+    {
+        $this->android = $message;
+    }
+    public function getMessagePriority()
+    {
+        return $this->android;
+    }
+
 }
