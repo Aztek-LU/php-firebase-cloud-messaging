@@ -194,6 +194,9 @@ class Message implements \JsonSerializable
         if ($this->notification) {
             $jsonData['notification'] = $this->notification;
         }
+        if ($this->android) {
+            $jsonData['android'] = $this->android;
+        }
 
         return $jsonData;
     }
