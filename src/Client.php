@@ -75,8 +75,8 @@ class Client implements ClientInterface
      */
     public function send(Message $message)
     {
-        var_dump($message); die;
         $param = ['message' => $message];
+            echo json_encode($param); die;
         // FCM HTTP V1 does not support sending notifications to multiple devices (supported only in legacy API via registration_tokens
         // So, Adding topic subscription, sending notification to topic, then remove topic subscription
         $recipients = $message->getRecipients();
