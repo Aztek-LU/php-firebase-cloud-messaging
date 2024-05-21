@@ -65,7 +65,7 @@ class Message implements \JsonSerializable
 
     public function setPriority($priority)
     {
-        $this->priority = $priority;
+        $this->android['priority'] = $priority;
         return $this;
     }
 
