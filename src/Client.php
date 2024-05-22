@@ -89,7 +89,9 @@ class Client implements ClientInterface
             if ($response->getStatusCode() == 200) {
                 $messageArr = json_decode(json_encode($param), true);
                 unset($messageArr['message']['registration_ids']);
+                unset($messageArr['message']['data']['participantCode']);
                 $messageArr['message']['topic'] = $topic;
+                $messageArr['message']['data']['projectCode'] = $topic;
                 $output = $this->guzzleClient->post(
                                     $this->getHTTPV1ApiUrl(),
                                     [
