@@ -103,7 +103,7 @@ class Client implements ClientInterface
                                     ]
                 );
             }
-            $response = $this->removeTopicSubscription($topic, $tokens);
+            //$response = $this->removeTopicSubscription($topic, $tokens);
             return $output;
         } else {
             return $this->guzzleClient->post(
