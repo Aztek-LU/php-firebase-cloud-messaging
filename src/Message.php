@@ -189,7 +189,7 @@ class Message implements \JsonSerializable
             $jsonData['data'] = $this->data;
         }
         if ($this->priority) {
-            $jsonData['priority'] = $this->priority;
+            $jsonData['android'] = ['priority' => $this->priority];
         }
         if ($this->notification) {
             $jsonData['notification'] = $this->notification;
@@ -256,5 +256,9 @@ class Message implements \JsonSerializable
     /* Get All recipients */
     public function getRecipients() {
         return $this->recipients;
+    }
+
+    public function clearRecipients() {
+        $this->recipients = [];
     }
 }

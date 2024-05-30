@@ -64,6 +64,75 @@ class Client implements ClientInterface
         $this->accessToken = $accessToken;
         return $this;
     }
+
+    /**
+     * generates a base64 encoded string for the google servers
+     *
+     * @param string $text
+     *
+     * @return string
+     */
+    private function base64URLEncode($text)
+    {
+        return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($text));
+    }
+
+    /**
+     * generates a JWT token for the google servers
+     *
+     * @param string $issuer
+     * @param string $privateKey
+     *
+     * @return string
+     */
+    private function generateJWT($issuer, $privateKey)
+    {
+        $header = json_encode([
+            'alg' => 'RS256',
+            'typ' => 'JWT',
+        ]);
+
+        $nowSeconds = time();
+
+        $payload = json_encode([
+            'iss' => $issuer,
+            'scope' => 'https://www.googleapis.com/auth/firebase.messaging',
+            'aud' => 'https://www.googleapis.com/oauth2/v4/token',
+            'exp' => $nowSeconds + 3600,
+            'iat' => $nowSeconds,
+        ]);
+
+        $signature = '';
+
+        $jwt = $this->base64URLEncode($header) . '.' . $this->base64URLEncode($payload);
+        openssl_sign($jwt, $signature, $privateKey, 'sha256WithRSAEncryption');
+
+        $jwt .= '.' . $this->base64URLEncode($signature);
+
+        return $jwt;
+    }
+
+    /**
+     * fetches an access token from the google servers
+     */
+    public function fetchAccessToken($issuer, $privateKey)
+    {
+        $jwt = $this->generateJWT($issuer, $privateKey);
+
+        $response = $this->guzzleClient->post(
+            'https://www.googleapis.com/oauth2/v4/token',
+            [
+                'form_params' => [
+                    'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+                    'assertion' => $jwt
+                ]
+            ]
+        );
+
+        $body = json_decode($response->getBody());
+        $this->accessToken = $body->access_token;
+    }
+
     /**
      * sends your notification to the google servers and returns a guzzle repsonse object
      * containing their answer.
@@ -88,26 +157,30 @@ class Client implements ClientInterface
             $topic = "Topic_".date("YmdHis")."_".substr(md5(rand()), 0, 4);
             $response = $this->addTopicSubscription($topic, $tokens);
             if ($response->getStatusCode() == 200) {
-                $messageArr = json_decode(json_encode($param), true);
-                unset($messageArr['message']['registration_ids']);
-                $messageArr['message']['topic'] = $topic;
+                $param['message']->clearRecipients();
+                $param['message']->addRecipient(new Recipient\Topic($topic));
+
                 $output = $this->guzzleClient->post(
-                                    $this->getHTTPV1ApiUrl(),
-                                    [
-                                        'headers' => [
-                                            'Authorization' => sprintf('Bearer %s', $this->accessToken),
-                                            'Content-Type' => 'application/json'
-                                        ],
-                                        'body' => json_encode($messageArr)
-                                    ]
+                    $this->getHTTPV1ApiUrl(),
+                    [
+                        'headers' => [
+                            'Authorization' => sprintf('Bearer %s', $this->accessToken),
+                            'Content-Type' => 'application/json'
+                        ],
+                        'body' => json_encode($param)
+                    ]
                 );
+
+                if ($output->getStatusCode() == 200) {
+                    $this->removeTopicSubscription($topic, $tokens);
+                }
             }
-            /*if ($output->getStatusCode() == 200) {
-                $response = $this->removeTopicSubscription($topic, $tokens);
-            }*/
-            return $output;
+            else {
+                $output = $response;
+            }
         } else {
-            return $this->guzzleClient->post(
+            var_dump(__LINE__, json_encode($param));
+            $output = $this->guzzleClient->post(
                 $this->getHTTPV1ApiUrl(),
                 [
                     'headers' => [
@@ -118,8 +191,8 @@ class Client implements ClientInterface
                 ]
             );
         }
-        return $output;
 
+        return $output;
     }
 
     /**
@@ -191,6 +264,7 @@ class Client implements ClientInterface
     {
         $this->projectId = $projectId;
     }
+
     private function getHTTPV1ApiUrl()
     {
         return self::HTTPV1_API_URL_PREFIX.$this->getProjectId().self::HTTPV1_API_URL_POSTEFIX;
