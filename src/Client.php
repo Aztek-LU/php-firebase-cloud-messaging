@@ -179,7 +179,6 @@ class Client implements ClientInterface
                 $output = $response;
             }
         } else {
-            var_dump(__LINE__, json_encode($param));
             $output = $this->guzzleClient->post(
                 $this->getHTTPV1ApiUrl(),
                 [
@@ -236,7 +235,7 @@ class Client implements ClientInterface
             [
                 'headers' => [
                     'Authorization' => sprintf('Bearer %s', $this->accessToken),
-                    'access_token_auth' => true,
+                    'access_token_auth' => 'true',
                     'Content-Type' => 'application/json'
                 ],
                 'body' => json_encode([

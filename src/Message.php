@@ -260,5 +260,6 @@ class Message implements \JsonSerializable
 
     public function clearRecipients() {
         $this->recipients = [];
+        $this->recipientType = null;
     }
 }
